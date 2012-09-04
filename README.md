@@ -1,0 +1,1 @@
+﻿quickge.tt aims to provide a quick and seemless way to upload files to ge.tt, including background uploading of any file with Explorer integration.

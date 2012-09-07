@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="quickge.tt.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="email" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="pass" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="apikey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA7NgBr7rHo0qkwNxaBjfbSAAAAAACAAAAAAAQZgAAAAEAACAAAACGLXcAPXeRFrim3wQDJOO2mU2Br8Gdj4Qs++JJGE5a2wAAAAAOgAAAAAIAACAAAACtHEAF30H5vsTb+SHVV16HR+e6cSGZ3wuQldnsaCg/rVAAAAD/uoaHQL6EI0aFaXP1KBAG3lNFWUdepVN7rjHHl6yGRLSm+qgaWicvuSLRpJ3cnz9i553YXARoleEQdfr8sLh4J6BEVRwZqy5bJNM4lAZ8Q0AAAABWjyfVfBLRsQ2MGDtM2K6HvTKnLCDTw0OUnqdg66h+G9ZrkMCb6prpWt2E3X6+FapIn2HwcTGyDkpsXDZ9yXgb</Value>
+    </Setting>
+    <Setting Name="valid" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

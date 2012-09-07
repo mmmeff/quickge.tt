@@ -31,23 +31,19 @@ namespace quickge.tt.src.quickgett
             // Create a tray menu
             trayMenu = new ContextMenu();
 
-            trayMenu.MenuItems.Add(new MenuItem("Configure", Configure));
-            trayMenu.MenuItems.Add(new MenuItem("Upload", OnMenuUpload));
+            trayMenu.MenuItems.Add(new MenuItem("Upload...", OnMenuUpload));
+            trayMenu.MenuItems.Add(new MenuItem("Switch User", Configure));
             trayMenu.MenuItems.Add(new MenuItem("Exit", OnExit));
 
-            // Create a tray icon. In this example we use a
-            // standard system icon for simplicity, but you
-            // can of course use your own custom icon too.
             trayIcon = new NotifyIcon();
-            
-            trayIcon.Icon = new Icon(SystemIcons.Application, 40, 40);
+            trayIcon.Icon = Properties.Resources.favicon;
 
             // Add menu to tray icon and show it.
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
 
             //create a client
-            client = new GettClient();
+            client = new GettClient(trayIcon);
 
             //check for user/pass credentials in settings
             //if missing, prompt for them.
@@ -56,10 +52,12 @@ namespace quickge.tt.src.quickgett
             {
                 LoginForm lf = new LoginForm(client);
                 lf.Show();
+                client.Notify("You need to log in to ge.tt!");
             }
             else
             {
                 //credentials exist, auto login
+                client.Notify("Logging into ge.tt with saved credentials...");
                 client.Login();
             }
 
@@ -86,6 +84,7 @@ namespace quickge.tt.src.quickgett
             this.Dispose();
             Application.Exit();
             Application.ExitThread();
+            this.Close();
         }
 
         protected override void Dispose(bool isDisposing)
@@ -131,6 +130,7 @@ namespace quickge.tt.src.quickgett
                     //thread unsafe, errors when closing. Safe to ignore.
                 }
             }
+            Thread.EndThreadAffinity();
         }
 
         

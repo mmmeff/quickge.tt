@@ -12,39 +12,36 @@ namespace quickge.tt.src.quickgett
     {
         private GettUser user;
         private Boolean alive, loggedin;
-        private int refreshInMinutes = 1;
+        private int refreshInSeconds = 3;
         public string statusMessage { get; set; }
+        private NotifyIcon trayIcon;
 
-        public GettClient()
+        public GettClient(NotifyIcon trayIcon)
         {
             statusMessage = "Not logged in.";
+            this.trayIcon = trayIcon;
         }
 
         public Boolean Login()
         {
-            Console.WriteLine("Logging in...");
             try
             {
                 Gett.Sharing.GettUser user = new Gett.Sharing.GettUser();
                 user.Login(CredentialManager.apikey, CredentialManager.email, CredentialManager.password);
-                
                 user.RefreshMe();
                 CredentialManager.valid = true;
-                Console.WriteLine("Login user: {0} ({1})", user.Me.Email, user.Me.FullName);
-                Console.WriteLine("Storage, you are using {0} of {1} bytes, you still have {2} bytes free.",
-                    user.Me.Storage.Used, user.Me.Storage.Total, user.Me.Storage.Free);
-
 
                 loggedin = true;
                 KeepAlive();
                 statusMessage = "Logged in.";
+                Notify("Succesfully logged into Ge.tt");
                 this.user = user;
             }
             catch (WebException e)
             {
                 //login was bad
                 CredentialManager.valid = false;
-                MessageBox.Show("Bad login!");
+                MessageBox.Show("text", "caption");
             }
             return CredentialManager.valid;
         }
@@ -68,9 +65,10 @@ namespace quickge.tt.src.quickgett
         {
             while (alive)
             {
-                Thread.Sleep(refreshInMinutes * 60 * 1000);
+                Thread.Sleep(refreshInSeconds *  1000);
                 user.RefreshLogin();
             }
+            Thread.EndThreadAffinity();
         }
 
         public void KillKeepAliveThread()
@@ -81,19 +79,20 @@ namespace quickge.tt.src.quickgett
 
         public void Upload(string path)
         {
+            Upload upload = new Upload(path);
             if (loggedin)
             {
-                Upload upload = new Upload(path);
                 GettShare share = user.Shares.CreateShare(upload.filename);
                 GettFile file = share.CreateFile(upload.filename);
-                Console.WriteLine("Uploading: " + upload.filename);
                 file.UploadFileAsync(upload.path);
                 file.UploadProgressChanged += UploadProgressChangedEventHandler;
+                file.UploadFileCompleted += UploadFileCompleted;
                 System.Windows.Forms.Clipboard.SetText(file.Info.GettUrl);
-                Console.WriteLine("URL Copied to clipboard.");
+                Notify("Upload of " + upload.filename +" started. The URL to the download page has been copied to your clipboard.");
             }
             else
             {
+                Notify("Upload of " + upload.filename + " failed!");
                 MessageBox.Show("Not logged in!");
             }
         }
@@ -101,15 +100,21 @@ namespace quickge.tt.src.quickgett
         public void UploadProgressChangedEventHandler(Object sender,
     UploadProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage == 100)
-            {
-                statusMessage = "Upload Completed";
-            }
+            statusMessage = "Upload Progress: " + e.ProgressPercentage + "%";
+        }
 
-            if (e.ProgressPercentage % 5 == 0)
-            {
-                statusMessage = "Upload Progress: " + e.ProgressPercentage + "%";
-            }
+        public void UploadFileCompleted(Object sender, UploadFileCompletedEventArgs e)
+        {
+            Notify("Upload completed!");
+        }
+
+        public void Notify(string message)
+        {
+            trayIcon.BalloonTipText = message;
+            trayIcon.BalloonTipTitle = "quickge.tt";
+            trayIcon.Icon = Properties.Resources.favicon;
+            trayIcon.Visible = true;
+            trayIcon.ShowBalloonTip(3);
         }
 
     }

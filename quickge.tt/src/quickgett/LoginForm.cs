@@ -24,20 +24,7 @@ namespace quickge.tt.src.quickgett
         private void button1_Click(object sender, EventArgs e)
         {
 
-            CredentialManager.StoreCredentials(
-                (Application.OpenForms["LoginForm"].Controls["textbox1"] as TextBox).Text,
-                (Application.OpenForms["LoginForm"].Controls["textbox2"] as TextBox).Text);
-
-            if (client.Login())
-            {
-                this.Hide();
-            }
-            else
-            {
-                (Application.OpenForms["LoginForm"].Controls["textbox1"] as TextBox).Text = "";
-                (Application.OpenForms["LoginForm"].Controls["textbox2"] as TextBox).Text = "";
-                CredentialManager.ClearCredentials();
-            }
+            AttemptLogin();
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -45,5 +32,32 @@ namespace quickge.tt.src.quickgett
             Process.Start("http://ge.tt");
         }
 
+        private void textBox2_keyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+                AttemptLogin();
+        }
+
+        private void AttemptLogin()
+        {
+            this.Hide();
+            CredentialManager.StoreCredentials(
+                (Application.OpenForms["LoginForm"].Controls["textbox1"] as TextBox).Text,
+                (Application.OpenForms["LoginForm"].Controls["textbox2"] as TextBox).Text);
+
+            if (client.Login())
+            {
+
+                this.Dispose();
+                this.Close();
+            }
+            else
+            {
+                this.Show();
+                (Application.OpenForms["LoginForm"].Controls["textbox1"] as TextBox).Text = "";
+                (Application.OpenForms["LoginForm"].Controls["textbox2"] as TextBox).Text = "";
+                CredentialManager.ClearCredentials();
+            }
+        }
     }
 }

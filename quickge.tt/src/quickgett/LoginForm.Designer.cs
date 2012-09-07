@@ -77,6 +77,7 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(75, 42);
             this.textBox2.Name = "textBox2";
+            this.textBox2.KeyPress += textBox2_keyPress;
             this.textBox2.PasswordChar = '*';
             this.textBox2.Size = new System.Drawing.Size(221, 20);
             this.textBox2.TabIndex = 4;
@@ -103,7 +104,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = Properties.Resources.favicon;
             this.Name = "LoginForm";
             this.Text = "Login to Ge.tt";
             this.ResumeLayout(false);
